@@ -1,0 +1,56 @@
+# Tanahku
+
+> Free web application for measuring land area accurately using satellite imagery. Mark boundaries, calculate geodesic area/perimeter, and export results as PDF or GeoJSON. Bilingual EN/ID. No registration required.
+
+## About
+
+- **Name**: Tanahku
+- **URL**: https://tanahku.vercel.app
+- **Languages**: Bahasa Indonesia, English
+- **Category**: Geospatial / Land Survey / Productivity
+- **Pricing**: Free, no registration, no ads
+- **Technology**: React 18, Vite 6, Leaflet, Turf.js, Tailwind CSS
+- **Repository**: https://github.com/leoui/tanahku
+
+## Features
+
+- Draw polygon boundaries by clicking on a satellite map
+- Real-time geodesic area calculation (m², hectares, Indonesian tumbak)
+- Perimeter, bounding-box dimensions, center coordinates
+- Self-intersection detection with visual warning
+- Reverse geocoding via OpenStreetMap (address, village, district, city, province)
+- Accuracy confidence indicator (High/Medium/Low)
+- Export to PDF report (with map screenshot, measurements table, QR code)
+- Export to GeoJSON for GIS import
+- Share via native Web Share API, WhatsApp, Telegram, or clipboard
+- Multiple tile layers: Esri Satellite, Google Satellite, OpenStreetMap, Hybrid
+- GPS geolocation with high-accuracy mode
+- Worldwide location search via Nominatim
+- Full bilingual UI with persistent language toggle
+- Dark glassmorphism UI with responsive design
+- Error boundary with graceful crash recovery
+
+## How It Works
+
+1. Search for a location globally using the search bar
+2. Click "Mark Land" to enter drawing mode
+3. Click on the satellite map to place boundary vertices
+4. Drag vertices to adjust; use Undo to remove points
+5. Click "Done" to finalize the polygon
+6. View measurements in the right panel
+7. Share results or export to PDF / GeoJSON
+
+## Technical
+
+- Geodesic calculations use Turf.js (Vincenty formulae) for Earth-curvature-aware accuracy
+- jsPDF and html2canvas are lazy-loaded (dynamic import) to minimize initial bundle size
+- All API calls use AbortController for cancellation and stale-state prevention
+- Indonesian tumbak units adjust per province (Jawa Barat: 14 m², Bali: 10 m², Lombok: 12 m²)
+- Language preference persisted in localStorage
+- 0 npm audit vulnerabilities; jsPDF upgraded from 2.x to 4.x to patch 12 CVEs
+
+## API Dependencies
+
+- OpenStreetMap Nominatim (geocoding, rate-limited per OSM policy)
+- Esri World Imagery / Google Maps tiles (satellite imagery)
+- QR Server API (qrserver.com, QR code generation)

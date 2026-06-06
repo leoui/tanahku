@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#0f1a14"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="40" y="40" width="1120" height="550" rx="24" fill="none" stroke="rgba(16,185,129,0.15)" stroke-width="2"/>
+  <!-- Logo area -->
+  <rect x="80" y="80" width="72" height="72" rx="16" fill="url(#accent)"/>
+  <text x="116" y="130" text-anchor="middle" font-family="system-ui,sans-serif" font-size="40" fill="white" font-weight="bold">T</text>
+  <!-- Title -->
+  <text x="180" y="125" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="52" fill="white" font-weight="800">Tanahku</text>
+  <text x="180" y="155" font-family="'Space Mono',monospace" font-size="14" fill="#10b981" font-weight="700" letter-spacing="4">SATELLITE PRECISION</text>
+  <!-- Tagline -->
+  <text x="640" y="320" text-anchor="middle" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="36" fill="white" font-weight="700">Ukur Tanah via Citra Satelit</text>
+  <text x="640" y="365" text-anchor="middle" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-size="20" fill="#999">Free land measurement tool · Geodesic accuracy · PDF &amp; GeoJSON export</text>
+  <!-- Feature pills -->
+  <rect x="190" y="420" width="200" height="48" rx="24" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.25)" stroke-width="1"/>
+  <text x="290" y="450" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#10b981" font-weight="600">📐 Geodesic Area</text>
+  <rect x="420" y="420" width="180" height="48" rx="24" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.25)" stroke-width="1"/>
+  <text x="510" y="450" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#10b981" font-weight="600">📄 PDF Report</text>
+  <rect x="630" y="420" width="200" height="48" rx="24" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.25)" stroke-width="1"/>
+  <text x="730" y="450" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#10b981" font-weight="600">🗺️ GeoJSON</text>
+  <rect x="860" y="420" width="150" height="48" rx="24" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.25)" stroke-width="1"/>
+  <text x="935" y="450" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#10b981" font-weight="600">🌍 ID / EN</text>
+  <!-- URL -->
+  <text x="640" y="540" text-anchor="middle" font-family="'Space Mono',monospace" font-size="16" fill="#555">tanahku.vercel.app</text>
+  <!-- Bottom accent line -->
+  <rect x="80" y="580" width="1040" height="3" rx="1.5" fill="url(#accent)" opacity="0.5"/>
+</svg>

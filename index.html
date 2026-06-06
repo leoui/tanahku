@@ -3,37 +3,125 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#10b981" />
-    
+    <meta name="color-scheme" content="dark" />
+
     <!-- Primary Meta Tags -->
-    <title>Tanahku - Ukur Tanah via Citra Satelit</title>
-    <meta name="title" content="Tanahku - Ukur Tanah via Citra Satelit" />
-    <meta name="description" content="Aplikasi gratis untuk mengukur luas tanah secara akurat menggunakan citra satelit. Tandai batas, dapatkan luas, dan share hasil dalam PDF." />
-    <link rel="canonical" href="https://tanahku.vercel.app" />
-    
+    <title>Tanahku — Ukur Tanah via Citra Satelit | Free Land Measurement Tool</title>
+    <meta name="title" content="Tanahku — Ukur Tanah via Citra Satelit | Free Land Measurement Tool" />
+    <meta name="description" content="Free web application for measuring land area using satellite imagery. Draw polygon boundaries on a satellite map, get real-time geodesic area and perimeter calculations, and export results as PDF or GeoJSON. Bilingual EN/ID. No registration required." />
+    <meta name="keywords" content="land measurement, satellite measurement, area calculator, ukur tanah, pengukuran tanah, luas tanah, geodesic, polygon, GIS, GeoJSON, leaflet, turf.js, tanahku" />
+    <meta name="author" content="Tanahku" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <link rel="canonical" href="https://tanahku.de" />
+
+    <!-- Alternate languages -->
+    <link rel="alternate" hreflang="id" href="https://tanahku.de/?lang=id" />
+    <link rel="alternate" hreflang="en" href="https://tanahku.de/?lang=en" />
+    <link rel="alternate" hreflang="x-default" href="https://tanahku.de" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://tanahku.vercel.app" />
-    <meta property="og:title" content="Tanahku - Ukur Tanah via Citra Satelit" />
-    <meta property="og:description" content="Ukur luas tanah Anda dengan akurasi tinggi via citra satelit. Gratis, tanpa registrasi." />
+    <meta property="og:url" content="https://tanahku.de" />
+    <meta property="og:title" content="Tanahku — Ukur Tanah via Citra Satelit | Free Land Measurement" />
+    <meta property="og:description" content="Ukur luas tanah Anda dengan akurasi tinggi via citra satelit. Geodesic measurement, PDF export, GeoJSON. Gratis, tanpa registrasi. Bilingual EN/ID." />
     <meta property="og:site_name" content="Tanahku" />
-    
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:image" content="https://tanahku.de/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Tanahku — Satellite land measurement application interface" />
+
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://tanahku.vercel.app" />
-    <meta property="twitter:title" content="Tanahku - Ukur Tanah via Citra Satelit" />
-    <meta property="twitter:description" content="Ukur luas tanah Anda dengan akurasi tinggi via citra satelit. Gratis, tanpa registrasi." />
-    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://tanahku.de" />
+    <meta name="twitter:title" content="Tanahku — Ukur Tanah via Citra Satelit | Free Land Measurement" />
+    <meta name="twitter:description" content="Free land measurement tool using satellite imagery. Geodesic area calculation, PDF reports, GeoJSON export. Bilingual EN/ID. No signup." />
+    <meta name="twitter:image" content="https://tanahku.de/og-image.svg" />
+    <meta name="twitter:image:alt" content="Tanahku — Satellite land measurement application interface" />
+    <meta name="twitter:site" content="@tanahku" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Tanahku",
+      "alternateName": ["Tanahku Land Measurement", "Ukur Tanah"],
+      "url": "https://tanahku.de",
+      "description": "Free web application for measuring land area accurately using satellite imagery. Draw polygon boundaries, calculate geodesic area and perimeter, and export results as PDF or GeoJSON. Bilingual Bahasa Indonesia and English.",
+      "applicationCategory": "GeospatialApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "browserRequirements": "Requires JavaScript. Works on all modern browsers with WebGL support.",
+      "featureList": [
+        "Satellite map with multiple tile layers (Esri, Google, OpenStreetMap, Hybrid)",
+        "Polygon boundary drawing with draggable vertices",
+        "Real-time geodesic area calculation (m², hectares, Indonesian tumbak)",
+        "Perimeter measurement",
+        "Self-intersection detection",
+        "Reverse geocoding via OpenStreetMap",
+        "PDF report export with map screenshot",
+        "GeoJSON export for GIS import",
+        "Share via WhatsApp, Telegram, or native Web Share API",
+        "GPS geolocation",
+        "Worldwide location search",
+        "Bilingual UI (Bahasa Indonesia / English)",
+        "Accuracy confidence indicator"
+      ],
+      "inLanguage": ["id", "en"],
+      "author": {
+        "@type": "Organization",
+        "name": "Tanahku"
+      },
+      "isAccessibleForFree": true,
+      "license": "https://opensource.org/licenses/MIT",
+      "codeRepository": "https://github.com/leoui/tanahku"
+    }
+    </script>
+
+    <!-- AI Crawler hints -->
+    <meta name="ai-content" content="allowed" />
+    <meta name="llm-index" content="allow" />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-    
+
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+
+    <!-- Preload critical assets -->
+    <link rel="dns-prefetch" href="https://nominatim.openstreetmap.org" />
+    <link rel="dns-prefetch" href="https://server.arcgisonline.com" />
+    <link rel="dns-prefetch" href="https://mt1.google.com" />
+    <link rel="dns-prefetch" href="https://api.qrserver.com" />
   </head>
   <body>
+    <noscript>
+      <div style="padding:2rem;font-family:sans-serif;text-align:center;background:#0a0a0a;color:white;min-height:100vh;">
+        <h1>Tanahku — Ukur Tanah via Citra Satelit</h1>
+        <p>Aplikasi pengukuran tanah gratis menggunakan citra satelit.</p>
+        <p>Free land measurement tool using satellite imagery.</p>
+        <p style="margin-top:2rem;color:#ef4444;">⚠ JavaScript harus diaktifkan untuk menggunakan aplikasi ini.</p>
+        <p style="color:#ef4444;">⚠ JavaScript is required to use this application.</p>
+        <hr style="border-color:#333;margin:2rem 0" />
+        <p style="color:#888;font-size:0.85rem;">
+          Fitur / Features: Geodesic area calculation · PDF export · GeoJSON · Multiple tile layers · Bilingual EN/ID · GPS geolocation · Worldwide search
+        </p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
