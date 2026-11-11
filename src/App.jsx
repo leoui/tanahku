@@ -225,8 +225,37 @@ export default function LandMeasurementApp(){
   const gmaps=useMemo(()=>measurements?.centroid?`https://www.google.com/maps?q=${measurements.centroid.lat},${measurements.centroid.lng}`:'',[measurements?.centroid]);
   const shareText=useMemo(()=>{if(!measurements)return'';const d=new Date().toLocaleString(lang==='id'?'id-ID':'en-US');return`\u{1F4CD} ${shareTitle}\n\n\u{1F4D0} ${tl('area')}: ${measurements.areaM2} m\u00B2 (${measurements.areaHa} ${tl('hectares')})\n\u{1F4CF} ${tl('perimeter')}: ${measurements.perimeter} m\n\u2194\uFE0F ${tl('estDimensions')}: ${measurements.width} m \u00D7 ${measurements.height} m\n\n\u{1F5FA}\uFE0F ${tl('centerCoords')}: ${measurements.centroid.lat.toFixed(6)}, ${measurements.centroid.lng.toFixed(6)}\n\u{1F517} ${gmaps}\n\n${tl('shareFooter')} \u2014 https://tanahku.de\n${d}`},[measurements,shareTitle,gmaps,tl,lang]);
 
-  // capture map — foreignObjectRendering for SVG polygon, useCORS for same-origin tiles
-  const captureMap=useCallback(async()=>{const el=containerRef.current?.querySelector('.leaflet-container');if(!el)return null;const tiles=el.querySelectorAll('img.leaflet-tile');await Promise.allSettled([...tiles].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));await new Promise(r=>setTimeout(r,800));try{const{default:h2c}=await import('html2canvas');const c=await h2c(el,{useCORS:true,allowTaint:false,backgroundColor:'#1a1a1a',logging:false,scale:Math.max(window.devicePixelRatio||1,2),foreignObjectRendering:true});return c.toDataURL('image/png',0.92)}catch(e){console.error('Capture error:',e);showNotification(tl('notifCaptureFail'),'error');return null}},[showNotification,tl]);
+  // capture map — composite tiles, SVG overlay and vertex markers onto a canvas at their on-screen
+  // positions (getBoundingClientRect). html2canvas mis-handles Leaflet's translate3d panes, which
+  // left the map black (foreignObjectRendering) or the polygon shifted from the tiles.
+  const captureMap=useCallback(async()=>{
+    const el=containerRef.current?.querySelector('.leaflet-container');if(!el)return null;
+    const tiles=el.querySelectorAll('img.leaflet-tile');
+    await Promise.allSettled([...tiles].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
+    await new Promise(r=>setTimeout(r,800));
+    const load=src=>new Promise(r=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src});
+    try{
+      const R=el.getBoundingClientRect(),S=Math.max(window.devicePixelRatio||1,2);
+      const cv=document.createElement('canvas');cv.width=Math.round(R.width*S);cv.height=Math.round(R.height*S);
+      const ctx=cv.getContext('2d');ctx.scale(S,S);ctx.fillStyle='#1a1a1a';ctx.fillRect(0,0,R.width,R.height);
+      for(const t of tiles){const r=t.getBoundingClientRect(),img=await load(t.currentSrc||t.src);if(img){ctx.globalAlpha=parseFloat(getComputedStyle(t).opacity)||1;ctx.drawImage(img,r.left-R.left,r.top-R.top,r.width,r.height)}}
+      ctx.globalAlpha=1;
+      for(const svg of el.querySelectorAll('.leaflet-overlay-pane svg')){
+        const r=svg.getBoundingClientRect(),c=svg.cloneNode(true);
+        c.setAttribute('xmlns','http://www.w3.org/2000/svg');c.setAttribute('width',r.width);c.setAttribute('height',r.height);c.style.transform='';
+        const url=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(c)],{type:'image/svg+xml'}));
+        const img=await load(url);URL.revokeObjectURL(url);if(img)ctx.drawImage(img,r.left-R.left,r.top-R.top,r.width,r.height);
+      }
+      for(const m of el.querySelectorAll('.leaflet-marker-icon')){
+        const r=m.getBoundingClientRect();if(!r.width)continue;
+        const cx=r.left-R.left+r.width/2,cy=r.top-R.top+r.height/2,rad=Math.min(r.width,r.height)/2;
+        ctx.beginPath();ctx.arc(cx,cy,rad,0,2*Math.PI);ctx.fillStyle='#10b981';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#fff';ctx.stroke();
+        const label=(m.textContent||'').trim();
+        if(label){ctx.fillStyle='#fff';ctx.font=`bold ${Math.max(8,rad)}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,cx,cy+.5)}
+      }
+      return cv.toDataURL('image/png',0.92);
+    }catch(e){console.error('Capture error:',e);showNotification(tl('notifCaptureFail'),'error');return null}
+  },[showNotification,tl]);
 
   // export PDF
   const exportToPDF=useCallback(async()=>{if(!measurements){showNotification(tl('notifMarkFirst'),'error');return}showNotification(tl('notifProcessingPDF'));const mi=await captureMap();try{const{jsPDF}=await import('jspdf');const pdf=new jsPDF('p','mm','a4');pdf.setFillColor(16,185,129);pdf.rect(0,0,210,25,'F');pdf.setTextColor(255,255,255);pdf.setFontSize(18);pdf.setFont('helvetica','bold');pdf.text(tl('pdfTitle'),105,12,{align:'center'});pdf.setFontSize(9);pdf.setFont('helvetica','normal');pdf.text(tl('pdfSubtitle'),105,19,{align:'center'});pdf.setTextColor(30,30,30);pdf.setFontSize(14);pdf.setFont('helvetica','bold');pdf.text(shareTitle,105,35,{align:'center'});pdf.setFontSize(9);pdf.setFont('helvetica','normal');pdf.setTextColor(100,100,100);pdf.text(`${tl('pdfMeasuredOn')} ${new Date().toLocaleString(lang==='id'?'id-ID':'en-US')}`,105,41,{align:'center'});if(mi){try{pdf.addImage(mi,'PNG',15,47,180,90)}catch{}}pdf.setTextColor(30,30,30);pdf.setFontSize(12);pdf.setFont('helvetica','bold');pdf.text(tl('pdfResults'),15,148);pdf.setDrawColor(16,185,129);pdf.setLineWidth(0.5);pdf.line(15,150,195,150);pdf.setFontSize(10);let y=158;const dr=(l,v)=>{pdf.setFont('helvetica','normal');pdf.setTextColor(80,80,80);pdf.text(l,20,y);pdf.setFont('helvetica','bold');pdf.setTextColor(20,20,20);pdf.text(v,100,y);y+=6};dr(tl('pdfArea'),`${measurements.areaM2} m\u00B2 (${measurements.areaHa} ha)`);dr(tl('pdfPerimeter'),`${measurements.perimeter} m`);dr(tl('pdfDimensions'),`${measurements.width} m \u00D7 ${measurements.height} m`);dr(tl('pdfPointCount'),`${measurements.vertexCount} ${tl('pdfPoints')}`);dr(tl('pdfCenter'),`${measurements.centroid.lat.toFixed(6)}, ${measurements.centroid.lng.toFixed(6)}`);y+=2;pdf.setFont('helvetica','bold');pdf.setFontSize(12);pdf.text(tl('pdfLocation'),15,y);pdf.line(15,y+2,195,y+2);y+=10;pdf.setFontSize(10);if(locationInfo){if(locationInfo.road)dr(tl('pdfRoad'),locationInfo.road);if(locationInfo.village)dr(tl('pdfVillage'),locationInfo.village);if(locationInfo.district)dr(tl('pdfDistrict'),locationInfo.district);if(locationInfo.city)dr(tl('pdfCity'),locationInfo.city);if(locationInfo.province)dr(tl('pdfProvince'),locationInfo.province);if(locationInfo.postcode)dr(tl('pdfPostcode'),locationInfo.postcode)}try{const q=genQR(shareText,150);const qb=await(await fetch(q)).blob();const qd=await new Promise(r=>{const rd=new FileReader();rd.onloadend=()=>r(rd.result);rd.readAsDataURL(qb)});pdf.addImage(qd,'PNG',155,235,40,40);pdf.setFontSize(8);pdf.setTextColor(100,100,100);pdf.text(tl('pdfScan'),175,280,{align:'center'})}catch{}pdf.setFontSize(7);pdf.setTextColor(120,120,120);pdf.setFont('helvetica','italic');pdf.text(pdf.splitTextToSize(tl('pdfDisclaimer'),130),15,240);pdf.setFontSize(6);pdf.setTextColor(130,130,130);pdf.setFont('helvetica','normal');pdf.text(tl('copyrightPrefix')+'Lewi Verdatama'+tl('copyrightSuffix'),105,270,{align:'center'});pdf.setFontSize(7);pdf.text(`${tl('pdfPage')} \u2022 ${gmaps}`,105,290,{align:'center'});pdf.save(`tanah-${Date.now()}.pdf`);showNotification(tl('notifPDFDone'))}catch(e){console.error('PDF error:',e);showNotification(tl('notifPDFFail'),'error')}},[measurements,shareTitle,shareText,gmaps,locationInfo,captureMap,showNotification,tl,lang]);
